@@ -20,5 +20,17 @@
       "phone": "9376543210",
       "email": "arjun.chou@example.com"
     }
+  ],
+  "Office": [
+    {
+      "firstName": "Alice",
+      "lastName": "Smith",
+      "address": "456 Market St",
+      "city": "Berkhera pathani",
+      "state": "California",
+      "zip": "90001",
+      "phone": "9800543211",
+      "email": "john.new@example.com"
+    }
   ]
 }

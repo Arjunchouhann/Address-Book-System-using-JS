@@ -1,0 +1,24 @@
+{
+  "Personal": [
+    {
+      "firstName": "Arjun",
+      "lastName": "Chouhan",
+      "address": "223 Main St",
+      "city": "Bhopal",
+      "state": "MadhyaPradesh",
+      "zip": "10001",
+      "phone": "9376543210",
+      "email": "arjun.chou@example.com"
+    },
+    {
+      "firstName": "Arjun",
+      "lastName": "Chouhan",
+      "address": "223 Main St",
+      "city": "Bhopal",
+      "state": "MadhyaPradesh",
+      "zip": "10001",
+      "phone": "9376543210",
+      "email": "arjun.chou@example.com"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ const fs = require('fs');
 
 class AddressBookApp {
     constructor() {
-        this.filePath = 'Contacts/AddressBooks.json';
+        this.filePath = "Contacts/Contacts.json";
         this.addressBooks = this.loadAddressBooks();
     }
 
@@ -118,15 +118,28 @@ class AddressBookApp {
         this.saveAddressBooks();
         console.log(`Contact '${firstName} ${lastName}' updated successfully!`);
     }
+
+    countContacts(bookName) {
+        if (!this.addressBooks[bookName]) {
+            console.log(`Address Book '${bookName}' does not exist.`);
+            return 0;
+        }
+
+        // Use reduce function to count the contacts
+        const contactCount = this.addressBooks[bookName].reduce((count) => count + 1, 0);
+        console.log(`Total contacts in '${bookName}': ${contactCount}`);
+        return contactCount;
+    }
 }
 
 // Example Usage
 const app = new AddressBookApp();
 app.createAddressBook("Personal");
-app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "NY", "10001", "9876543210", "john.doe@example.com");
+app.addContact("Personal", "Shrsity", "Mishra", "123 Main St", "New York", "MadhyaPradesh", "10001", "9875543210", "shristy.mishra@example.com");
 app.viewContacts("Personal");
-app.createAddressBook("Work");
-app.addContact("Work", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
-app.viewContacts("Work");
-app.editContact("Work", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
-app.deleteContact("Work", "Alice", "Smith");
+app.createAddressBook("Office");
+app.addContact("Office", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
+app.viewContacts("Office");
+app.editContact("Office", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
+app.deleteContact("Office", "Alice", "Smith");
+app.countContacts("Personal");

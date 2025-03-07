@@ -1,62 +1,15 @@
-[
-  {
-    "firstName": "Arjun",
-    "lastName": "Chouhan",
-    "address": "123 Street",
-    "city": "new Delhi",
-    "state": "Delhi",
-    "zip": "1000423",
-    "phone": "9876343210",
-    "email": "arjunn@example.com"
-  },
-  {
-    "firstName": "John",
-    "lastName": "Doe",
-    "address": "123 Street",
-    "city": "New York",
-    "state": "NY",
-    "zip": "10001",
-    "phone": "9876543210",
-    "email": "john@example.com"
-  },
-  {
-    "firstName": "Abhishek",
-    "lastName": "Patil",
-    "address": "123 Street",
-    "city": "Khargone",
-    "state": "MP",
-    "zip": "451001",
-    "phone": "8435197632",
-    "email": "abhishek@example.com"
-  },
-  {
-    "firstName": "Abhishek",
-    "lastName": "Patil",
-    "address": "123 Street",
-    "city": "Khargone",
-    "state": "MP",
-    "zip": "451001",
-    "phone": "8435197632",
-    "email": "abhishek@example.com"
-  },
-  {
-    "firstName": "Abhishek",
-    "lastName": "Patil",
-    "address": "123 Street",
-    "city": "Khargone",
-    "state": "MP",
-    "zip": "451001",
-    "phone": "8435197632",
-    "email": "abhishek@example.com"
-  },
-  {
-    "firstName": "Marry",
-    "lastName": "Jain",
-    "address": "123 Main St",
-    "city": "New York",
-    "state": "NEW YORK",
-    "zip": "10001",
-    "phone": "9876542340",
-    "email": "marry.jain@example.com"
-  }
-]
+{
+  "Personal": [
+    {
+      "firstName": "Shrsity",
+      "lastName": "Mishra",
+      "address": "123 Main St",
+      "city": "New York",
+      "state": "MadhyaPradesh",
+      "zip": "10001",
+      "phone": "9875543210",
+      "email": "shristy.mishra@example.com"
+    }
+  ],
+  "Office": []
+}

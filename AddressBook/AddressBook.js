@@ -3,19 +3,18 @@ const fs = require('fs');
 class AddressBookApp {
     constructor() {
         this.filePath = 'Contacts/Contacts.json';
-        this.addressBooks = this.loadAddressBooks();
+        this.addressBooks = this.loadAddressBooks(); // Load existing data
     }
 
     loadAddressBooks() {
         try {
             if (fs.existsSync(this.filePath)) {
-                const data = fs.readFileSync(this.filePath, 'utf8');
-                return JSON.parse(data);
+                return JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
             }
         } catch (error) {
-            console.error("Error loading address books:", error);
+            console.error("Error loading data:", error);
         }
-        return {};
+        return {}; // Return empty if file doesn't exist
     }
 
     saveAddressBooks() {
@@ -24,12 +23,12 @@ class AddressBookApp {
 
     createAddressBook(name) {
         if (this.addressBooks[name]) {
-            console.log(`Address Book '${name}' already exists.`);
+            console.log(`'${name}' already exists.`);
             return;
         }
         this.addressBooks[name] = [];
         this.saveAddressBooks();
-        console.log(`New Address Book '${name}' created successfully.`);
+        console.log(`'${name}' created.`);
     }
 
     validateContact(firstName, lastName, address, city, state, zip, phone, email) {
@@ -45,79 +44,58 @@ class AddressBookApp {
         if (!addressRegex.test(city)) throw new Error("Invalid City");
         if (!addressRegex.test(state)) throw new Error("Invalid State");
         if (!zipRegex.test(zip)) throw new Error("Invalid Zip Code");
-        if (!phoneRegex.test(phone)) throw new Error("Invalid Phone Number");
-        if (!emailRegex.test(email)) throw new Error("Invalid Email Address");
+        if (!phoneRegex.test(phone)) throw new Error("Invalid Phone");
+        if (!emailRegex.test(email)) throw new Error("Invalid Email");
     }
 
     addContact(bookName, firstName, lastName, address, city, state, zip, phone, email) {
         if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
+            console.log(`'${bookName}' not found.`);
             return;
         }
         try {
             this.validateContact(firstName, lastName, address, city, state, zip, phone, email);
-
             const contact = { firstName, lastName, address, city, state, zip, phone, email };
 
-
-
-            this.addressBooks[bookName].push(contact);
-            const isDuplicate = this.addressBooks[bookName].some(c => c.name === contact.name);
-            if (isDuplicate) {
-                console.log(`Duplicate entry! Contact '${contact.name}' already exists in '${bookName}'.`);
+            // Check for duplicates
+            if (this.addressBooks[bookName].some(c => c.firstName === firstName && c.lastName === lastName)) {
+                console.log("Duplicate contact.");
                 return;
             }
+
+            this.addressBooks[bookName].push(contact);
             this.saveAddressBooks();
-            console.log("Contact added successfully!");
+            console.log("Contact added.");
         } catch (error) {
-            console.error("Error adding contact:", error.message);
+            console.error("Error:", error.message);
         }
     }
-
 
     viewContacts(bookName) {
-        if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
-            return;
-        }
-        console.log(`Contacts in '${bookName}':`, this.addressBooks[bookName]);
+        console.log(this.addressBooks[bookName] || `'${bookName}' not found.`);
     }
 
-
     deleteContact(bookName, firstName, lastName) {
-        if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
-            return;
-        }
+        if (!this.addressBooks[bookName]) return console.log(`'${bookName}' not found.`);
 
         let contacts = this.addressBooks[bookName];
         const initialLength = contacts.length;
 
-        // Filter out the contact to be deleted
-        this.addressBooks[bookName] = contacts.filter(
-            c => !(c.firstName === firstName && c.lastName === lastName)
-        );
+        this.addressBooks[bookName] = contacts.filter(c => c.firstName !== firstName || c.lastName !== lastName);
 
         if (this.addressBooks[bookName].length === initialLength) {
-            console.log(`Contact '${firstName} ${lastName}' not found in '${bookName}'.`);
+            console.log("Contact not found.");
         } else {
             this.saveAddressBooks();
-            console.log(`Contact '${firstName} ${lastName}' deleted successfully!`);
+            console.log("Contact deleted.");
         }
     }
+
     editContact(bookName, firstName, lastName, newDetails) {
-        if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
-            return;
-        }
+        if (!this.addressBooks[bookName]) return console.log(`'${bookName}' not found.`);
 
-        let contacts = this.addressBooks[bookName];
-        let contact = contacts.find(c => c.firstName === firstName && c.lastName === lastName);
-
-        if (!contact) {
-            console.log(`Contact '${firstName} ${lastName}' not found in '${bookName}'.`);
-            return;
-        }
+        let contact = this.addressBooks[bookName].find(c => c.firstName === firstName && c.lastName === lastName);
+        if (!contact) return console.log("Contact not found.");
 
         Object.keys(newDetails).forEach(key => {
             if (contact[key] !== undefined && newDetails[key] !== undefined) {
@@ -126,62 +104,37 @@ class AddressBookApp {
         });
 
         this.saveAddressBooks();
-        console.log(`Contact '${firstName} ${lastName}' updated successfully!`);
+        console.log("Contact updated.");
     }
 
     countContacts(bookName) {
-        if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
-            return 0;
-        }
-
-        // Use reduce function to count the contacts
-        const contactCount = this.addressBooks[bookName].reduce((count) => count + 1, 0);
-        console.log(`Total contacts in '${bookName}': ${contactCount}`);
-        return contactCount;
+        console.log(`Total: ${this.addressBooks[bookName]?.length || 0}`);
     }
-
 
     searchByCityOrState(cityOrState) {
         let results = [];
-
         Object.keys(this.addressBooks).forEach(bookName => {
-            const contacts = this.addressBooks[bookName].filter(contact =>
-                contact.city === cityOrState ||
-                contact.state === cityOrState
-            );
-            results = results.concat(contacts);
+            results.push(...this.addressBooks[bookName].filter(contact =>
+                contact.city?.toLowerCase() === cityOrState.toLowerCase() ||
+                contact.state?.toLowerCase() === cityOrState.toLowerCase()
+            ));
         });
 
-        if (results.length === 0) {
-            console.log(`No contacts found in '${cityOrState}'.`);
-        } else {
-            console.log(`Contacts in '${cityOrState}':`, results);
-        }
+        console.log(results.length ? results : "No matches found.");
     }
-    countByCityOrState(cityOrState) {
-        let count = 0;
-        Object.keys(this.addressBooks).forEach(bookName => {
-            count += this.addressBooks[bookName].filter(contact =>
-                contact.city === cityOrState ||
-                contact.state=== cityOrState
-            ).length;
-        });
-        console.log(`Total contacts in '${cityOrState}': ${count}`);
-        return count;
-    }
-    sortContactsLexicographically(bookName) {
-        if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
-            return;
+
+    sortContacts(bookName, field = "firstName") {
+        if (!this.addressBooks[bookName]) return console.log(`'${bookName}' not found.`);
+
+        if (!['firstName', 'lastName', 'city', 'state', 'zip', 'phone', 'email'].includes(field)) {
+            return console.log("Invalid sort field.");
         }
-        this.addressBooks[bookName].sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+        this.addressBooks[bookName].sort((a, b) => a[field]?.localeCompare(b[field]) || 0);
         this.saveAddressBooks();
-        console.log(`Contacts in '${bookName}' sorted lexicographically by first name.`);
+        console.log("Contacts sorted.");
     }
 }
-
-
 
 // Example Usage
 const app = new AddressBookApp();
@@ -189,14 +142,10 @@ app.createAddressBook("Personal");
 app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "NY", "10001", "9876543210", "john.doe@example.com");
 app.viewContacts("Personal");
 app.createAddressBook("Work");
-app.addContact("Work", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
+app.addContact("Work", "Alice", "Smith", "456 Market St", "Los Angeles", "California", "90001", "9123456789", "alice.smith@example.com");
 app.viewContacts("Work");
-app.editContact("Work", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
+app.editContact("Work", "Alice", "Smith", { phone: "9876543211", email: "alice.new@example.com" });
 app.deleteContact("Work", "Alice", "Smith");
 app.countContacts("Personal");
-app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "Nwq idhhd", "10001", "9876543210", "john.doe@example.com");
-// app.searchByCityOrState("California");
-app.addContact("Work", "Vivek", "Sahu", "456 Market St", "New Jersery", "New jersey", "90001", "9123456789", "alice.smith@example.com");
 app.searchByCityOrState("New York");
-app.countByCityOrState("New York");
-app.sortContactsLexicographically("Personal");
+app.sortContacts("Personal", "city");

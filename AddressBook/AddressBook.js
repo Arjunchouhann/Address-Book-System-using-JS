@@ -164,11 +164,20 @@ class AddressBookApp {
         Object.keys(this.addressBooks).forEach(bookName => {
             count += this.addressBooks[bookName].filter(contact =>
                 contact.city === cityOrState ||
-                contact.state === cityOrState
+                contact.state=== cityOrState
             ).length;
         });
         console.log(`Total contacts in '${cityOrState}': ${count}`);
         return count;
+    }
+    sortContactsLexicographically(bookName) {
+        if (!this.addressBooks[bookName]) {
+            console.log(`Address Book '${bookName}' does not exist.`);
+            return;
+        }
+        this.addressBooks[bookName].sort((a, b) => a.firstName.localeCompare(b.firstName));
+        this.saveAddressBooks();
+        console.log(`Contacts in '${bookName}' sorted lexicographically by first name.`);
     }
 }
 
@@ -188,5 +197,6 @@ app.countContacts("Personal");
 app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "Nwq idhhd", "10001", "9876543210", "john.doe@example.com");
 // app.searchByCityOrState("California");
 app.addContact("Work", "Vivek", "Sahu", "456 Market St", "New Jersery", "New jersey", "90001", "9123456789", "alice.smith@example.com");
-app.searchByCityOrState("New York")
+app.searchByCityOrState("New York");
 app.countByCityOrState("New York");
+app.sortContactsLexicographically("Personal");

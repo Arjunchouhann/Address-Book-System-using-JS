@@ -2,7 +2,7 @@ const fs = require('fs');
 
 class AddressBookApp {
     constructor() {
-        this.filePath = 'Contacts/Contacts.json';
+        this.filePath = 'Contacts\Contacts.json';
         this.addressBooks = this.loadAddressBooks();
     }
 
@@ -147,8 +147,8 @@ class AddressBookApp {
 
         Object.keys(this.addressBooks).forEach(bookName => {
             const contacts = this.addressBooks[bookName].filter(contact =>
-                contact.city === cityOrState ||
-                contact.state === cityOrState
+                contact.city.toLowerCase() === cityOrState.toLowerCase() ||
+                contact.state.toLowerCase() === cityOrState.toLowerCase()
             );
             results = results.concat(contacts);
         });

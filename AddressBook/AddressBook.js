@@ -73,14 +73,27 @@ class AddressBookApp {
         console.log(`Contacts in '${bookName}':`, this.addressBooks[bookName]);
     }
 
-    deleteAddressBook(bookName) {
+
+    deleteContact(bookName, firstName, lastName) {
         if (!this.addressBooks[bookName]) {
             console.log(`Address Book '${bookName}' does not exist.`);
             return;
         }
-        delete this.addressBooks[bookName];
-        this.saveAddressBooks();
-        console.log(`Address Book '${bookName}' deleted successfully.`);
+
+        let contacts = this.addressBooks[bookName];
+        const initialLength = contacts.length;
+
+        // Filter out the contact to be deleted
+        this.addressBooks[bookName] = contacts.filter(
+            c => !(c.firstName === firstName && c.lastName === lastName)
+        );
+
+        if (this.addressBooks[bookName].length === initialLength) {
+            console.log(`Contact '${firstName} ${lastName}' not found in '${bookName}'.`);
+        } else {
+            this.saveAddressBooks();
+            console.log(`Contact '${firstName} ${lastName}' deleted successfully!`);
+        }
     }
     editContact(bookName, firstName, lastName, newDetails) {
         if (!this.addressBooks[bookName]) {
@@ -110,9 +123,10 @@ class AddressBookApp {
 // Example Usage
 const app = new AddressBookApp();
 app.createAddressBook("Personal");
-app.addContact("Personal", "Arjun", "Chouhan", "123 Main St", "New York", "NY", "10001", "9876543210", "arjun.chouhan@example.com");
+app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "NY", "10001", "9876543210", "john.doe@example.com");
 app.viewContacts("Personal");
-app.createAddressBook("Office");
-app.addContact("Office", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
-app.viewContacts("Office");
-app.editContact("Office", "Alice", "Smith", { phone: "9800543211", email: "john.new@example.com" });
+app.createAddressBook("Work");
+app.addContact("Work", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
+app.viewContacts("Work");
+app.editContact("Work", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
+app.deleteContact("Work", "Alice", "Smith");

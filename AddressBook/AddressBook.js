@@ -2,7 +2,7 @@ const fs = require('fs');
 
 class AddressBookApp {
     constructor() {
-        this.filePath = "Contacts/Contacts.json";
+        this.filePath = 'Contacts/Contacts.json';
         this.addressBooks = this.loadAddressBooks();
     }
 
@@ -49,20 +49,22 @@ class AddressBookApp {
         if (!emailRegex.test(email)) throw new Error("Invalid Email Address");
     }
 
-    addContact(bookName, firstName, lastName, address, city, state, zip, phone, email) {
+    addContact(bookName, contact) {
         if (!this.addressBooks[bookName]) {
-            console.log(`Address Book '${bookName}' does not exist.`);
+            this.addressBooks[bookName] = [];
+        }
+
+        // Check for duplicate using `some`
+        const isDuplicate = this.addressBooks[bookName].some(c => c.name === contact.name);
+
+        if (isDuplicate) {
+            console.log(`Duplicate entry! Contact '${contact.name}' already exists in '${bookName}'.`);
             return;
         }
-        try {
-            this.validateContact(firstName, lastName, address, city, state, zip, phone, email);
-            const contact = { firstName, lastName, address, city, state, zip, phone, email };
-            this.addressBooks[bookName].push(contact);
-            this.saveAddressBooks();
-            console.log("Contact added successfully!");
-        } catch (error) {
-            console.error("Error adding contact:", error.message);
-        }
+
+        this.addressBooks[bookName].push(contact);
+        this.saveAddressBooks();
+        console.log(`Contact '${contact.name}' added successfully to '${bookName}'.`);
     }
 
     viewContacts(bookName) {
@@ -135,11 +137,13 @@ class AddressBookApp {
 // Example Usage
 const app = new AddressBookApp();
 app.createAddressBook("Personal");
-app.addContact("Personal", "Shrsity", "Mishra", "123 Main St", "New York", "MadhyaPradesh", "10001", "9875543210", "shristy.mishra@example.com");
+app.addContact("Personal", "John", "Doe", "123 Main St", "New York", "NY", "10001", "9876543210", "john.doe@example.com");
 app.viewContacts("Personal");
-app.createAddressBook("Office");
-app.addContact("Office", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
-app.viewContacts("Office");
-app.editContact("Office", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
-app.deleteContact("Office", "Alice", "Smith");
+app.createAddressBook("Work");
+app.addContact("Work", "Alice", "Smith", "456 Market St", "Berkhera pathani", "California", "90001", "9123456789", "alice.smith@example.com");
+app.viewContacts("Work");
+app.editContact("Work", "Alice", "Smith", { phone: "9876543211", email: "john.new@example.com" });
+app.deleteContact("Work", "Alice", "Smith");
 app.countContacts("Personal");
+app.addContact("Personal", { name: "John Doe", phone: "1234567890" });
+app.addContact("Personal", { name: "John Doe", phone: "1234567890" }); // Should prevent duplicate

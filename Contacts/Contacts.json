@@ -9,7 +9,14 @@
       "zip": "10001",
       "phone": "9875543210",
       "email": "shristy.mishra@example.com"
+    },
+    {
+      "name": "John Doe",
+      "phone": "1234567890"
     }
   ],
-  "Office": []
+  "Office": [],
+  "Work": [
+    "Alice"
+  ]
 }

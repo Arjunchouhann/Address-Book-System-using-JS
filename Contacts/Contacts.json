@@ -40,13 +40,23 @@
     "email": "abhishek@example.com"
   },
   {
-    "firstName": "Shristy",
-    "lastName": "Mishra",
+    "firstName": "Abhishek",
+    "lastName": "Patil",
     "address": "123 Street",
-    "city": "Korba",
-    "state": "CG",
-    "zip": "451284",
-    "phone": "239847291",
-    "email": "shristy@example.com"
+    "city": "Khargone",
+    "state": "MP",
+    "zip": "451001",
+    "phone": "8435197632",
+    "email": "abhishek@example.com"
+  },
+  {
+    "firstName": "Marry",
+    "lastName": "Jain",
+    "address": "123 Main St",
+    "city": "New York",
+    "state": "NEW YORK",
+    "zip": "10001",
+    "phone": "9876542340",
+    "email": "marry.jain@example.com"
   }
 ]
